@@ -1,11 +1,62 @@
 import { fromNodeHeaders } from "better-auth/node";
 import { auth } from "../lib/auth.js";
 import { ConflictError, ForbiddenError, NotFoundError, WorkoutPlanNotActiveError, } from "../lib/errors/index.js";
-import { ErrorSchema, StartWorkoutSessionResponseSchema, UpdateWorkoutSessionBodySchema, UpdateWorkoutSessionParamsSchema, WorkoutPlanDaySessionParamsSchema, WorkoutPlanSchema, WorkoutSessionSchema, } from "../schemas/index.js";
+import { ErrorSchema, StartWorkoutSessionResponseSchema, UpdateWorkoutSessionBodySchema, UpdateWorkoutSessionParamsSchema, WorkoutPlanDaySessionParamsSchema, WorkoutPlanParamsSchema, WorkoutPlanSchema, WorkoutPlanSummarySchema, WorkoutSessionSchema, } from "../schemas/index.js";
 import { CreateWorkoutPlan } from "../usecases/CreateWorkoutPlan.js";
+import { GetWorkoutPlanById } from "../usecases/GetWorkoutPlanById.js";
 import { StartWorkoutSession } from "../usecases/StartWorkoutSession.js";
 import { UpdateWorkoutSession } from "../usecases/UpdateWorkoutSession.js";
 export const workoutPlanRoutes = async (app) => {
+    app.withTypeProvider().route({
+        method: "GET",
+        url: "/:workoutPlanId",
+        schema: {
+            tags: ["Workout Plans"],
+            summary: "Get a workout plan by id",
+            params: WorkoutPlanParamsSchema,
+            response: {
+                200: WorkoutPlanSummarySchema,
+                401: ErrorSchema,
+                403: ErrorSchema,
+                404: ErrorSchema,
+                500: ErrorSchema,
+            },
+        },
+        handler: async (request, reply) => {
+            try {
+                const session = await auth.api.getSession({
+                    headers: fromNodeHeaders(request.headers),
+                });
+                if (!session) {
+                    return reply.status(401).send({
+                        error: "Unauthorized",
+                        code: "UNAUTHORIZED",
+                    });
+                }
+                const getWorkoutPlanById = new GetWorkoutPlanById();
+                const result = await getWorkoutPlanById.execute({
+                    userId: session.user.id,
+                    workoutPlanId: request.params.workoutPlanId,
+                });
+                return reply.status(200).send(result);
+            }
+            catch (error) {
+                app.log.error(error);
+                if (error instanceof ForbiddenError) {
+                    return reply.status(403).send({
+                        error: error.message,
+                        code: "FORBIDDEN",
+                    });
+                }
+                if (error instanceof NotFoundError) {
+                    return reply.status(404).send({
+                        error: error.message,
+                        code: "NOT_FOUND_ERROR",
+                    });
+                }
+            }
+        },
+    });
     app.withTypeProvider().route({
         method: "POST",
         url: "/",
