@@ -8,18 +8,34 @@ datasource db {
 }
 
 model User {
-  id            String        @id
-  name          String
-  email         String        @unique
-  workoutPlans  WorkoutPlan[]
-  createdAt     DateTime      @default(now()) @db.Timestamptz()
-  updatedAt     DateTime      @updatedAt @db.Timestamptz()
-  emailVerified Boolean       @default(false)
-  image         String?
-  sessions      Session[]
-  accounts      Account[]
+  id                 String         @id
+  name               String
+  email              String         @unique
+  workoutPlans       WorkoutPlan[]
+  trainData          UserTrainData?
+  createdAt          DateTime       @default(now()) @db.Timestamptz()
+  updatedAt          DateTime       @updatedAt @db.Timestamptz()
+  emailVerified      Boolean        @default(false)
+  image              String?
+  sessions           Session[]
+  accounts           Account[]
+  weightInGrams      Int?
+  heighInCentimeters Int?
+  age                Int?
+  bodyFatPercentage  Int?
 
   @@map("user")
+}
+
+model UserTrainData {
+  userId              String   @id
+  user                User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  weightInGrams       Int
+  heightInCentimeters Int
+  age                 Int
+  bodyFatPercentage   Float
+  createdAt           DateTime @default(now()) @db.Timestamptz()
+  updatedAt           DateTime @updatedAt @db.Timestamptz()
 }
 
 model WorkoutPlan {
@@ -55,7 +71,7 @@ model WorkoutDay {
   coverImageUrl              String?
   createdAt                  DateTime          @default(now()) @db.Timestamptz()
   updatedAt                  DateTime          @updatedAt @db.Timestamptz()
-  sessions WorkoutSession[]
+  sessions                   WorkoutSession[]
 }
 
 model WorkoutExercise {
@@ -63,7 +79,7 @@ model WorkoutExercise {
   name              String
   order             Int
   workoutDayId      String
-  workoutDay        WorkoutDay @relation(fields: [workoutDayId], references: [id] , onDelete: Cascade)
+  workoutDay        WorkoutDay @relation(fields: [workoutDayId], references: [id], onDelete: Cascade)
   sets              Int
   reps              Int
   restTimeInSeconds Int
@@ -72,20 +88,20 @@ model WorkoutExercise {
 }
 
 model WorkoutSession {
-  id String @id @default(uuid())
+  id           String     @id @default(uuid())
   workoutDayId String
-  workoutDay WorkoutDay @relation(fields: [workoutDayId], references: [id], onDelete: Cascade)
-  startedAt DateTime @db.Timestamptz()
-  completedAt DateTime? @db.Timestamptz()
-  createdAt         DateTime   @default(now()) @db.Timestamptz()
-  updatedAt         DateTime   @updatedAt @db.Timestamptz()
+  workoutDay   WorkoutDay @relation(fields: [workoutDayId], references: [id], onDelete: Cascade)
+  startedAt    DateTime   @db.Timestamptz()
+  completedAt  DateTime?  @db.Timestamptz()
+  createdAt    DateTime   @default(now()) @db.Timestamptz()
+  updatedAt    DateTime   @updatedAt @db.Timestamptz()
 }
 
 model Session {
   id        String   @id
   expiresAt DateTime
   token     String
-  createdAt DateTime @default(now()) 
+  createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   ipAddress String?
   userAgent String?
@@ -110,7 +126,7 @@ model Account {
   refreshTokenExpiresAt DateTime?
   scope                 String?
   password              String?
-  createdAt             DateTime  @default(now()) 
+  createdAt             DateTime  @default(now())
   updatedAt             DateTime  @updatedAt
 
   @@index([userId])
@@ -123,7 +139,7 @@ model Verification {
   value      String
   expiresAt  DateTime
   createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt 
+  updatedAt  DateTime @updatedAt
 
   @@index([identifier])
   @@map("verification")

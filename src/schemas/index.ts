@@ -180,3 +180,15 @@ export const StatsResponseSchema = z.object({
   conclusionRate: z.number().min(0),
   totalTimeInSeconds: z.number().min(0),
 });
+
+export const UserTrainDataSchema = z.object({
+  userId: z.uuid(),
+  weightInGrams: z.number().min(1),
+  heightInCentimeters: z.number().min(1),
+  age: z.number().min(1),
+  bodyFatPercentage: z.int().min(0),
+});
+
+export const UserTrainDataWithUserSchema = UserTrainDataSchema.extend({
+  userName: z.string().trim().min(1),
+});

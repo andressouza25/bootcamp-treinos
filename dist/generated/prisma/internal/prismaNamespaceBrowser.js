@@ -40,6 +40,7 @@ export const JsonNull = runtime.JsonNull;
 export const AnyNull = runtime.AnyNull;
 export const ModelName = {
     User: 'User',
+    UserTrainData: 'UserTrainData',
     WorkoutPlan: 'WorkoutPlan',
     WorkoutDay: 'WorkoutDay',
     WorkoutExercise: 'WorkoutExercise',
@@ -64,7 +65,20 @@ export const UserScalarFieldEnum = {
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     emailVerified: 'emailVerified',
-    image: 'image'
+    image: 'image',
+    weightInGrams: 'weightInGrams',
+    heighInCentimeters: 'heighInCentimeters',
+    age: 'age',
+    bodyFatPercentage: 'bodyFatPercentage'
+};
+export const UserTrainDataScalarFieldEnum = {
+    userId: 'userId',
+    weightInGrams: 'weightInGrams',
+    heightInCentimeters: 'heightInCentimeters',
+    age: 'age',
+    bodyFatPercentage: 'bodyFatPercentage',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
 };
 export const WorkoutPlanScalarFieldEnum = {
     id: 'id',
