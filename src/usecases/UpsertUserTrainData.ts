@@ -22,6 +22,10 @@ export class UpsertUserTrainData {
       throw new Error("Body fat percentage must be an integer.");
     }
 
+    if (dto.bodyFatPercentage < 0 || dto.bodyFatPercentage > 100) {
+      throw new Error("Body fat percentage must be between 0 and 100.");
+    }
+
     const userTrainData = await prisma.userTrainData.upsert({
       where: {
         userId: dto.userId,

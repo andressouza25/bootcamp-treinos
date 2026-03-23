@@ -186,7 +186,7 @@ export const UserTrainDataSchema = z.object({
   weightInGrams: z.number().min(1),
   heightInCentimeters: z.number().min(1),
   age: z.number().min(1),
-  bodyFatPercentage: z.int().min(0),
+  bodyFatPercentage: z.int().min(0).max(100),
 });
 
 export const UserTrainDataWithUserSchema = UserTrainDataSchema.extend({
