@@ -6,6 +6,7 @@ import Fastify from "fastify";
 import { jsonSchemaTransform, serializerCompiler, validatorCompiler, } from "fastify-type-provider-zod";
 import z from "zod";
 import { auth } from "./lib/auth.js";
+import { homeRoutes } from "./routes/home.js";
 import { workoutPlanRoutes } from "./routes/workout-plan.js";
 const app = Fastify({
     logger: true,
@@ -50,6 +51,7 @@ await app.register(fastifyApiReference, {
     },
 });
 // Routes
+await app.register(homeRoutes, { prefix: "/home" });
 await app.register(workoutPlanRoutes, { prefix: "/workout-plans" });
 // Controller
 app.withTypeProvider().route({

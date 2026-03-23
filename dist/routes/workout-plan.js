@@ -1,9 +1,10 @@
 import { fromNodeHeaders } from "better-auth/node";
 import { auth } from "../lib/auth.js";
 import { ConflictError, ForbiddenError, NotFoundError, WorkoutPlanNotActiveError, } from "../lib/errors/index.js";
-import { ErrorSchema, StartWorkoutSessionResponseSchema, WorkoutPlanDaySessionParamsSchema, WorkoutPlanSchema, } from "../schemas/index.js";
+import { ErrorSchema, StartWorkoutSessionResponseSchema, UpdateWorkoutSessionBodySchema, UpdateWorkoutSessionParamsSchema, WorkoutPlanDaySessionParamsSchema, WorkoutPlanSchema, WorkoutSessionSchema, } from "../schemas/index.js";
 import { CreateWorkoutPlan } from "../usecases/CreateWorkoutPlan.js";
 import { StartWorkoutSession } from "../usecases/StartWorkoutSession.js";
+import { UpdateWorkoutSession } from "../usecases/UpdateWorkoutSession.js";
 export const workoutPlanRoutes = async (app) => {
     app.withTypeProvider().route({
         method: "POST",
@@ -55,7 +56,7 @@ export const workoutPlanRoutes = async (app) => {
         url: "/:workoutPlanId/days/:workoutDayId/sessions",
         schema: {
             tags: ["Workout Plans"],
-            summary: "Start a workout session for a workout day",
+            summary: "Start a workout session",
             params: WorkoutPlanDaySessionParamsSchema,
             response: {
                 201: StartWorkoutSessionResponseSchema,
@@ -103,6 +104,60 @@ export const workoutPlanRoutes = async (app) => {
                     return reply.status(409).send({
                         error: error.message,
                         code: "WORKOUT_SESSION_ALREADY_STARTED",
+                    });
+                }
+                if (error instanceof NotFoundError) {
+                    return reply.status(404).send({
+                        error: error.message,
+                        code: "NOT_FOUND_ERROR",
+                    });
+                }
+            }
+        },
+    });
+    app.withTypeProvider().route({
+        method: "PATCH",
+        url: "/:workoutPlanId/days/:workoutDayId/sessions/:workoutSessionId",
+        schema: {
+            tags: ["Workout Plans"],
+            summary: "Update a workout session",
+            params: UpdateWorkoutSessionParamsSchema,
+            body: UpdateWorkoutSessionBodySchema,
+            response: {
+                200: WorkoutSessionSchema,
+                401: ErrorSchema,
+                403: ErrorSchema,
+                404: ErrorSchema,
+                500: ErrorSchema,
+            },
+        },
+        handler: async (request, reply) => {
+            try {
+                const session = await auth.api.getSession({
+                    headers: fromNodeHeaders(request.headers),
+                });
+                if (!session) {
+                    return reply.status(401).send({
+                        error: "Unauthorized",
+                        code: "UNAUTHORIZED",
+                    });
+                }
+                const updateWorkoutSession = new UpdateWorkoutSession();
+                const result = await updateWorkoutSession.execute({
+                    userId: session.user.id,
+                    workoutPlanId: request.params.workoutPlanId,
+                    workoutDayId: request.params.workoutDayId,
+                    workoutSessionId: request.params.workoutSessionId,
+                    completedAt: request.body.completedAt,
+                });
+                return reply.status(200).send(result);
+            }
+            catch (error) {
+                app.log.error(error);
+                if (error instanceof ForbiddenError) {
+                    return reply.status(403).send({
+                        error: error.message,
+                        code: "FORBIDDEN",
                     });
                 }
                 if (error instanceof NotFoundError) {
