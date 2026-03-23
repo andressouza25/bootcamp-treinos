@@ -101,3 +101,36 @@ export const WorkoutPlanSummarySchema = z.object({
   name: z.string().trim().min(1),
   workoutDays: z.array(WorkoutPlanDaySummarySchema),
 });
+
+export const WorkoutDayParamsSchema = z.object({
+  workoutPlanId: z.uuid(),
+  workoutDayId: z.uuid(),
+});
+
+export const WorkoutExerciseSchema = z.object({
+  id: z.uuid(),
+  name: z.string().trim().min(1),
+  order: z.number().min(0),
+  workoutDayId: z.uuid(),
+  sets: z.number().min(1),
+  reps: z.number().min(1),
+  restTimeInSeconds: z.number().min(1),
+});
+
+export const WorkoutDaySessionSummarySchema = z.object({
+  id: z.uuid(),
+  workoutDayId: z.uuid(),
+  startedAt: z.iso.date(),
+  completedAt: z.iso.date().optional(),
+});
+
+export const WorkoutDayDetailsSchema = z.object({
+  id: z.uuid(),
+  name: z.string().trim().min(1),
+  isRest: z.boolean(),
+  coverImageUrl: z.url().optional(),
+  estimatedDurationInSeconds: z.number().min(1),
+  exercises: z.array(WorkoutExerciseSchema),
+  weekDay: z.enum(WeekDay),
+  sessions: z.array(WorkoutDaySessionSummarySchema),
+});
