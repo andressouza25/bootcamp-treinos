@@ -3,7 +3,11 @@ import { FastifyInstance } from "fastify";
 import { ZodTypeProvider } from "fastify-type-provider-zod";
 
 import { auth } from "../lib/auth.js";
-import { ErrorSchema, StatsQuerySchema, StatsResponseSchema } from "../schemas/index.js";
+import {
+  ErrorSchema,
+  StatsQuerySchema,
+  StatsResponseSchema,
+} from "../schemas/index.js";
 import { GetStats } from "../usecases/GetStats.js";
 
 export const statsRoutes = async (app: FastifyInstance) => {
@@ -12,6 +16,7 @@ export const statsRoutes = async (app: FastifyInstance) => {
     url: "/",
     schema: {
       tags: ["Stats"],
+      operationId: "getStats",
       summary: "Get workout stats for a period",
       querystring: StatsQuerySchema,
       response: {
