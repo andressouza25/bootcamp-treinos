@@ -13,6 +13,7 @@ export const workoutPlanRoutes = async (app) => {
         method: "GET",
         url: "/",
         schema: {
+            operationId: "listWorkoutPlan",
             tags: ["Workout Plans"],
             summary: "List workout plans",
             querystring: WorkoutPlansQuerySchema,
@@ -44,6 +45,7 @@ export const workoutPlanRoutes = async (app) => {
         method: "GET",
         url: "/:workoutPlanId",
         schema: {
+            operationId: "getWorkoutPlan",
             tags: ["Workout Plans"],
             summary: "Get a workout plan by id",
             params: WorkoutPlanParamsSchema,
@@ -94,6 +96,7 @@ export const workoutPlanRoutes = async (app) => {
         method: "GET",
         url: "/:workoutPlanId/days/:workoutDayId",
         schema: {
+            operationId: "getWorkoutDays",
             tags: ["Workout Plans"],
             summary: "Get a workout day by id",
             params: WorkoutDayParamsSchema,
@@ -145,6 +148,7 @@ export const workoutPlanRoutes = async (app) => {
         method: "POST",
         url: "/",
         schema: {
+            operationId: "createWorkoutPlan",
             tags: ["Workout Plans"],
             summary: "Create a workout plan",
             body: WorkoutPlanSchema.omit({ id: true }),
@@ -190,6 +194,7 @@ export const workoutPlanRoutes = async (app) => {
         method: "POST",
         url: "/:workoutPlanId/days/:workoutDayId/sessions",
         schema: {
+            operationId: "createWorkoutSessions",
             tags: ["Workout Plans"],
             summary: "Start a workout session",
             params: WorkoutPlanDaySessionParamsSchema,
@@ -254,6 +259,7 @@ export const workoutPlanRoutes = async (app) => {
         method: "PATCH",
         url: "/:workoutPlanId/days/:workoutDayId/sessions/:workoutSessionId",
         schema: {
+            operationId: "updateWorkoutSession",
             tags: ["Workout Plans"],
             summary: "Update a workout session",
             params: UpdateWorkoutSessionParamsSchema,

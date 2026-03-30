@@ -59,6 +59,7 @@ await app.register(homeRoutes, { prefix: "/home" });
 await app.register(meRoutes, { prefix: "/me" });
 await app.register(statsRoutes, { prefix: "/stats" });
 await app.register(workoutPlanRoutes, { prefix: "/workout-plans" });
+await app.register(aiRoutes, { prefix: "/ai" });
 // Controller
 app.withTypeProvider().route({
     method: "GET",
@@ -91,6 +92,9 @@ app.withTypeProvider().route({
 app.route({
     method: ["GET", "POST"],
     url: "/api/auth/*",
+    schema: {
+        hide: true,
+    },
     async handler(request, reply) {
         try {
             // Construct request URL

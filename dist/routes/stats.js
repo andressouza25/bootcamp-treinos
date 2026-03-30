@@ -1,6 +1,6 @@
 import { fromNodeHeaders } from "better-auth/node";
 import { auth } from "../lib/auth.js";
-import { ErrorSchema, StatsQuerySchema, StatsResponseSchema } from "../schemas/index.js";
+import { ErrorSchema, StatsQuerySchema, StatsResponseSchema, } from "../schemas/index.js";
 import { GetStats } from "../usecases/GetStats.js";
 export const statsRoutes = async (app) => {
     app.withTypeProvider().route({
@@ -8,6 +8,7 @@ export const statsRoutes = async (app) => {
         url: "/",
         schema: {
             tags: ["Stats"],
+            operationId: "getStats",
             summary: "Get workout stats for a period",
             querystring: StatsQuerySchema,
             response: {

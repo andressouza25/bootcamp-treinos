@@ -1,4 +1,4 @@
-import { openai } from "@ai-sdk/openai";
+import { google } from "@ai-sdk/google";
 import { convertToModelMessages, stepCountIs, streamText, tool, } from "ai";
 import { fromNodeHeaders } from "better-auth/node";
 import z from "zod";
@@ -62,7 +62,7 @@ Cover images:
 export const aiRoutes = async (app) => {
     app.withTypeProvider().route({
         method: "POST",
-        url: "/ai",
+        url: "/",
         schema: {
             tags: ["AI"],
             summary: "Chat with the virtual personal trainer",
@@ -82,7 +82,7 @@ export const aiRoutes = async (app) => {
             }
             const { messages } = request.body;
             const result = streamText({
-                model: openai("gpt-4o-mini"),
+                model: google("gemini-2.5-flash"),
                 system: systemPrompt,
                 tools: {
                     getUserTrainData: tool({

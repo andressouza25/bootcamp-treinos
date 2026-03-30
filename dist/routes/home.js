@@ -1,7 +1,7 @@
 import { fromNodeHeaders } from "better-auth/node";
 import { auth } from "../lib/auth.js";
 import { NotFoundError } from "../lib/errors/index.js";
-import { ErrorSchema, HomeParamsSchema, HomeResponseSchema } from "../schemas/index.js";
+import { ErrorSchema, HomeParamsSchema, HomeResponseSchema, } from "../schemas/index.js";
 import { GetHomeData } from "../usecases/GetHomeData.js";
 export const homeRoutes = async (app) => {
     app.withTypeProvider().route({
@@ -9,6 +9,7 @@ export const homeRoutes = async (app) => {
         url: "/:date",
         schema: {
             tags: ["Home"],
+            operationId: "getHomeData",
             summary: "Get home data for a date",
             params: HomeParamsSchema,
             response: {
