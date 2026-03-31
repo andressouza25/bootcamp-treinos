@@ -191,7 +191,7 @@ export const aiRoutes = async (app: FastifyInstance) => {
             },
           }),
         },
-        stopWhen: stepCountIs(5),
+        stopWhen: stepCountIs(10),
         messages: await convertToModelMessages(messages),
       });
 

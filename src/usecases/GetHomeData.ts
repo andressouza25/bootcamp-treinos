@@ -119,11 +119,10 @@ export class GetHomeData {
 
     weekSessions.forEach((session) => {
       const sessionDate = dayjs.utc(session.startedAt).format("YYYY-MM-DD");
-      const currentConsistency =
-        consistencyByDay[sessionDate] ?? {
-          workoutDayCompleted: false,
-          workoutDayStarted: false,
-        };
+      const currentConsistency = consistencyByDay[sessionDate] ?? {
+        workoutDayCompleted: false,
+        workoutDayStarted: false,
+      };
 
       currentConsistency.workoutDayStarted = true;
 
@@ -153,13 +152,17 @@ export class GetHomeData {
     });
 
     const completedSessionDates = new Set(
-      completedSessions.map((session) =>
-        `${session.workoutDayId}:${dayjs.utc(session.startedAt).format("YYYY-MM-DD")}`,
+      completedSessions.map(
+        (session) =>
+          `${session.workoutDayId}:${dayjs.utc(session.startedAt).format("YYYY-MM-DD")}`,
       ),
     );
 
     const workoutDayByWeekDay = new Map(
-      activeWorkoutPlan.workoutDays.map((workoutDay) => [workoutDay.weekDay, workoutDay]),
+      activeWorkoutPlan.workoutDays.map((workoutDay) => [
+        workoutDay.weekDay,
+        workoutDay,
+      ]),
     );
 
     let workoutStreak = 0;
