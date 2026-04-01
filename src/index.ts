@@ -20,8 +20,22 @@ import { meRoutes } from "./routes/me.js";
 import { statsRoutes } from "./routes/stats.js";
 import { workoutPlanRoutes } from "./routes/workout-plan.js";
 
+const envToLogger = {
+  development: {
+    transport: {
+      target: "pino-pretty",
+      options: {
+        translateTime: "HH:MM:ss Z",
+        ignore: "pid,hostname",
+      },
+    },
+  },
+  production: true,
+  test: false,
+};
+
 const app = Fastify({
-  logger: true,
+  logger: envToLogger[env.NODE_ENV],
 });
 
 app.setValidatorCompiler(validatorCompiler);
@@ -146,7 +160,7 @@ app.route({
 });
 
 try {
-  await app.listen({ port: Number(env.PORT) || 8080 });
+  await app.listen({ host: "0.0.0.0", port: Number(env.PORT) || 8080 });
 } catch (err) {
   app.log.error(err);
   process.exit(1);
