@@ -4,3 +4,4 @@ dist
 tasks
 docs
 /src/generated/prisma
+.env.example
