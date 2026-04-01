@@ -1,9 +1,6 @@
 node_modules
-/src/generated/prisma
+dist
 .env
-./dist
-./tasks
 tasks
-./docs
 docs
-.env.example
+/src/generated/prisma
