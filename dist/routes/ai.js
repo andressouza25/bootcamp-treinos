@@ -82,7 +82,7 @@ export const aiRoutes = async (app) => {
             }
             const { messages } = request.body;
             const result = streamText({
-                model: google("gemini-2.5-flash"),
+                model: google("gemini-2.5-flash-lite"),
                 system: systemPrompt,
                 tools: {
                     getUserTrainData: tool({
@@ -166,7 +166,7 @@ export const aiRoutes = async (app) => {
                         },
                     }),
                 },
-                stopWhen: stepCountIs(5),
+                stopWhen: stepCountIs(10),
                 messages: await convertToModelMessages(messages),
             });
             const response = result.toUIMessageStreamResponse();
