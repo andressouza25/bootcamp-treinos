@@ -22,7 +22,8 @@ export const auth = betterAuth({
   advanced: {
     crossSubDomainCookies: {
       enabled: true,
-      domain: env.NODE_ENV === "production" ? ".andressouza25" : undefined,
+      domain:
+        env.NODE_ENV === "production" ? ".andressouza25.com.br" : undefined,
     },
   },
 });
